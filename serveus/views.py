@@ -124,12 +124,16 @@ def records():
     # Table sorter
     # print request.args.get('sort_by') # date, location, diagnosis
     # print request.args.get('order') # asc, desc
+    regionList = ['All Regions']
+    provinceList = ['All Provinces', 'kirong']
+    cityList = ['All Cities', 'aldric']
+    barangayList = ['All Barangays', 'noel']
     
     if request.args:
         malariaSelected = request.args.get('malaria_selection')
         regionSelected = request.args.get('region_selection')
         malariaIndex = malariaList.index(malariaSelected)
-        regionList = ['The Philippines'] + [str(i) for i in Region.query.all()]
+        regionList += [str(i) for i in Region.query.all()]
         regionIndex = regionList.index(regionSelected)
         
         date_start = request.args.get('date_start')
@@ -189,10 +193,9 @@ def records():
     pagination = Pagination(page, Pagination.PER_PAGE, len(caseList))
     caseList = caseList[(page-1)*Pagination.PER_PAGE : ((page-1)*Pagination.PER_PAGE) + Pagination.PER_PAGE]
     
-    regionList = Region.query.all()
-    regionList = ['The Philippines'] + [i for i in regionList]
+    regionList += [i for i in Region.query.all()]
     
-    return render_template("records.html", caseList = caseList, pagination = pagination, malariaList = malariaList, regionList = regionList, malariaIndex = malariaIndex, regionIndex = regionIndex, date_start = date_start, date_end = date_end, sort_by = sort_by, order = order, user = current_user)
+    return render_template("records.html", caseList = caseList, pagination = pagination, malariaList = malariaList, regionList = regionList, malariaIndex = malariaIndex, regionIndex = regionIndex, date_start = date_start, date_end = date_end, sort_by = sort_by, order = order, user = current_user, provinceList=provinceList, cityList=cityList, barangayList=barangayList)
 
     
 @app.route('/map/')

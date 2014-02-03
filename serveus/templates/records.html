@@ -113,14 +113,43 @@
                     {% endfor %}
 					</select>
 					</div>
+
 					<div class="input-prepend" style="width: 100%">
                     <span class="add-on">in&nbsp;&nbsp;&nbsp;</span>
-					<select style="width: calc(100% - 34px)" name="region_selection">
+					<select id="sel_region" style="width: calc(100% - 34px)" name="region_selection">
 					{% for i in regionList %}
                         <option {% if loop.index0 == regionIndex %}selected{% endif %}>{{ i }}</option>
                     {% endfor %}
 					</select>
 					</div>
+
+					<div id="province" class="input-prepend" style="width: 100%">
+                    <span class="add-on">in&nbsp;&nbsp;&nbsp;</span>
+					<select id="sel_province" style="width: calc(100% - 34px)" name="region_selection">
+					{% for i in provinceList %}
+                        <option {% if loop.index0 == provinceIndex %}selected{% endif %}>{{ i }}</option>
+                    {% endfor %}
+					</select>
+					</div>
+
+					<div id="city" class="input-prepend" style="width: 100%">
+                    <span class="add-on">in&nbsp;&nbsp;&nbsp;</span>
+					<select id="sel_city" style="width: calc(100% - 34px)" name="region_selection">
+					{% for i in cityList %}
+                        <option {% if loop.index0 == cityIndex %}selected{% endif %}>{{ i }}</option>
+                    {% endfor %}
+					</select>
+					</div>
+
+					<div id="barangay" class="input-prepend" style="width: 100%">
+                    <span class="add-on">in&nbsp;&nbsp;&nbsp;</span>
+					<select id="sel_barangay" style="width: calc(100% - 34px)" name="region_selection">
+					{% for i in barangayList %}
+                        <option {% if loop.index0 == barangayIndex %}selected{% endif %}>{{ i }}</option>
+                    {% endfor %}
+					</select>
+					</div>
+
                     <br>
                     <div class="input-prepend" style="width: 100%">
                     <span class="add-on">from</span>
@@ -235,6 +264,45 @@
             }).on('changeDate', function(ev) {
             checkout.hide();
             }).data('datepicker');
+
+            $('select#sel_region').change(function() {
+                if ($('select#sel_region').val() == 'All Regions') {
+                    $('div#province').hide();
+                } else {
+                    $('div#province').show();
+                }
+                $('select#sel_province').prop('selectedIndex', 0);
+                $('div#city').hide();
+                $('select#sel_city').prop('selectedIndex', 0);
+                $('div#barangay').hide();
+                $('select#sel_barangay').prop('selectedIndex', 0);
+            });
+
+            $('select#sel_province').change(function() {
+                if ($('select#sel_province').val() == 'All Provinces') {
+                    $('div#city').hide();
+                } else {
+                    $('div#city').show();
+                }
+                $('select#sel_city').prop('selectedIndex', 0);
+                $('div#barangay').hide();
+                $('select#sel_barangay').prop('selectedIndex', 0);
+            });
+
+            $('select#sel_city').change(function() {
+                if ($('select#sel_city').val() == 'All Cities') {
+                    $('div#barangay').hide();
+                } else {
+                    $('div#barangay').show();
+                }
+                $('select#sel_barangay').prop('selectedIndex', 0);
+            });
+
+            $(document).ready(function() {
+                $('div#province').hide();
+                $('div#city').hide();
+                $('div#barangay').hide();
+            });
         </script>
 	</body>
 </html>
