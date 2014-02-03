@@ -270,6 +270,14 @@
                 if ($('select#sel_region').val() == 'All Regions') {
                     $('div#province').hide();
                 } else {
+					$.getJSON('/ajax/records', {
+						region: $('select#sel_region').val()
+					}, function(data) {
+						$('select#sel_province').empty().append('<option selected>All Provinces</option>');
+						$.each(data.result, function(key, value) {
+							$('select#sel_province').append('<option>' + value + '</option>');
+						});
+					});
                     $('div#province').show();
                 }
                 $('select#sel_province').prop('selectedIndex', 0);
@@ -283,6 +291,15 @@
                 if ($('select#sel_province').val() == 'All Provinces') {
                     $('div#city').hide();
                 } else {
+					$.getJSON('/ajax/records', {
+						region: $('select#sel_region').val(),
+						province: $('select#sel_province').val()
+					}, function(data) {
+						$('select#sel_city').empty().append('<option selected>All Cities</option>');
+						$.each(data.result, function(key, value) {
+							$('select#sel_city').append('<option>' + value + '</option>');
+						});
+					});
                     $('div#city').show();
                 }
                 $('select#sel_city').prop('selectedIndex', 0);
@@ -294,6 +311,16 @@
                 if ($('select#sel_city').val() == 'All Cities') {
                     $('div#barangay').hide();
                 } else {
+					$.getJSON('/ajax/records', {
+						region: $('select#sel_region').val(),
+						province: $('select#sel_province').val(),
+						city: $('select#sel_city').val()
+					}, function(data) {
+						$('select#sel_barangay').empty().append('<option selected>All Barangays</option>');
+						$.each(data.result, function(key, value) {
+							$('select#sel_barangay').append('<option>' + value + '</option>');
+						});
+					});
                     $('div#barangay').show();
                 }
                 $('select#sel_barangay').prop('selectedIndex', 0);

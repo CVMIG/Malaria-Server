@@ -1,7 +1,7 @@
 import os, math, time, datetime, zipfile, base64, hashlib, glob, sqlite3
 import xml.etree.ElementTree as ET
 from functools import wraps
-from flask import render_template, flash, redirect, request, url_for, make_response, abort
+from flask import render_template, flash, redirect, request, url_for, make_response, abort, jsonify
 from flask.ext.login import login_user, current_user, LoginManager, logout_user, login_required
 #from flask.ext.wtf import Required
 from flask.ext.wtf import Form
@@ -112,6 +112,100 @@ def dashboard():
     infperc=str((float(infsum)/float(total)) *100)[:5] + '%'
     cases2=zip(malariaList[1:],casenum2,percent2)
     return render_template("dashboard.html", user = current_user, cases=cases, cases2=cases2, malariaList = malariaList[1:], regionList = regionList[1:], date=datetime.datetime.now().strftime('%B %d, %Y'), casenum=casenum, total=total, percent1=percent1, percent2=percent2 ,infsum=infsum, infperc=infperc)
+
+@app.route('/ajax/records')
+@login_required
+def ajax_records():
+	data = {}
+
+	# fake data
+	string = """
+	Region IV-B (MIMAROPA)
+		 Occidental Mindoro
+		 Oriental Mindoro
+		 Marinduque
+		 Romblon
+		 Palawan
+			Aborlan
+			Agutaya
+			Araceli
+			Balabac
+			Bataraza
+			Brooke's Point
+			Busuanga
+			Cagayancillo
+			Coron
+			Culion
+			Cuyo
+			Dumaran
+			El Nido
+			Kalayaan
+			Linapacan
+			Magsaysay
+			Narra
+			Puerto Princesa City
+			Quezon
+			Rizal
+			Roxas
+			San Vicente
+			Sofronio Espanola
+			Taytay
+	NCR (National Capital Region)
+		Capital
+			Manila
+		Eastern Manila
+			Mandaluyong
+			Marikina
+			Pasig
+			Quezon City
+			San Juan
+		CAMANAVA
+			Caloocan
+			Malabon
+			Navotas
+			Valenzuela
+		Southern Manila
+			Las Pinas
+			Makati
+			Muntinlupa
+			Paranaque
+			Pasay
+			Pateros
+			Taguig
+	"""
+	cur_region = None
+	cur_province = None
+	cur_city = None
+	for line in string.split('\n'):
+		count = line.count('\t')
+		name = line.strip()
+		if count == 1:
+			data[name] = {}
+			cur_region = name
+		elif count == 2:
+			data[cur_region][name] = {}
+			cur_province = name
+		elif count == 3:
+			data[cur_region][cur_province][name] = {}
+			cur_city = name
+
+	# region -> province -> city -> barangay
+	try:
+		if 'city' in request.args and 'province' in request.args and 'region' in request.args:
+			city = request.args.get('city', None)
+			province = request.args.get('province', None)
+			region = request.args.get('region', None)
+			result = data[region][province][city].keys()
+		elif 'province' in request.args and 'region' in request.args:
+			province = request.args.get('province', None)
+			region = request.args.get('region', None)
+			result = data[region][province].keys()
+		elif 'region' in request.args:
+			region = request.args.get('region', None)
+			result = data[region].keys()
+	except KeyError:
+		result=None
+	return jsonify(result=result)
 
 @app.route('/records/')
 @login_required
