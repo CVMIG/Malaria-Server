@@ -441,8 +441,8 @@ def timeline():
     date_end = max_date
     
     if default_view:
-        bound_end = max_date - datetime.timedelta(days=30)
-        bound_start = min_date + datetime.timedelta(days=30)
+        bound_end = max_date + datetime.timedelta(days=1)
+        bound_start = min_date - datetime.timedelta(days=1)
     
     
     
