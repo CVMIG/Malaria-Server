@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Outbreak Monitoring</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="/static/css/bootstrap.min.css" rel="stylesheet" media="screen">
+        <link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
+        <link href="/static/css/eyecon-datepicker.css" rel="stylesheet">
+        <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+        
+		<style>
+		html, body {
+			height: 100%;
+			margin: 0 0 0;
+            padding: 0 0 0;
+        }
+
+        #monitoring_timeframe{
+            color:#FFFFFF;
+        }
+		</style>
+	</head>
+	<body>
+		<div class="navbar" style="width: 100%;">
+			<div class="navbar-inner">
+				<a class="btn btn-navbar pull-right" data-toggle="collapse" data-target=".nav-collapse" style="padding: 4px 10px 4px; font-size: 14px; font-weight: bold">
+				Menu
+				</a>
+                <ul class="nav pull-right">
+                    <div class="btn-group">
+                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                        {{user.usertype.name}} {{ user.username }}
+                        <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                        <li><a href="/profilepage/">Profile</a></li>
+                        {% if user.usertype.name == "Administrator" %}<li><a href="/admin/">Admin Page</a></li>{% endif %}
+                        <li><a href="/logout/">Logout <i class="icon-off"></i></a></li>
+                        </ul>
+                    </div>
+                </ul>
+                <div class="nav-collapse collapse">
+                    <div>
+                        <ul class="nav pull-left">
+                            <li>&nbsp</li>
+                            <li><a href="/dashboard/"><i class="icon-tasks"></i> Summary</a></li>
+                            <li class="active"><a href="/monitoring/"><i class="icon-eye-open"></i> Monitoring</a></li>
+                            <li><a href="/records/"><i class="icon-book"></i> Records</a></li>
+                            <li><a href="/map/"><i class="icon-map-marker"></i> Map</a></li>
+                            <li><a href="/timeline/"><i class="icon-globe"></i> Timeline</a></li>
+                            <li><a href="#helpModal" id="help" data-toggle="modal"><i class="icon-question-sign"></i> Help</a></li>
+                        </ul>
+                    </div>
+                </div>
+			</div>
+		</div>
+        
+        <div id="loading_block" style="height: 100px; width: 100%; margin-top: 15%; text-align: center">
+            <img src="/static/images/loading.gif"/>
+        </div>
+        
+        <div id="map-canvas" class="google-maps" style="height: calc(100% - 42px); width: 100%; margin: -20px 0 0; display: none">
+        </div>
+
+        <div id="helpModal" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">close</button>
+                <h3 id="helpModalLabel">Map</h3>
+            </div>
+            <div class="modal-body">
+                <p>This page shows the distribution of malaria cases all over the country. <br> Cases from the last 30 days are shown by default. <br><br> Use the filters to narrow down the results. <br><br> <span style="font-weight: bold">Legend: </span><br>
+                &nbsp;&nbsp;&nbsp;<img src="http://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=F|FF0000|000000"/> Falciparum &nbsp;&nbsp;&nbsp; 
+                <img src="http://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=V|00FF00|000000"/> Vivax &nbsp;&nbsp;&nbsp; 
+                <img src="http://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=M|00FFFF|000000"/> Malariae &nbsp;&nbsp;&nbsp; 
+                <img src="http://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=O|FFFF00|000000"/> Ovale &nbsp;&nbsp;&nbsp; 
+                <img src="http://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=|FFFFFF|000000" /> No Malaria</p>
+            </div>
+        </div>
+        <span id="monitoring_timeframe">
+            <h1>{{location}}</h1>
+            <h1>{{week_start}} - {{week_end}}: {{cases_this_week}}</h1>
+        </span>  
+        <script>
+            function initialize() {
+                var myLatlng = new google.maps.LatLng({{lat}},{{lng}});
+                var mapOptions = {
+                    zoom: {{zoom}},
+                    center: myLatlng,
+                    mapTypeId: google.maps.MapTypeId.HYBRID
+                }
+                var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+                function addMarker(latLng, markerType) {
+                    var marker = new google.maps.Marker({
+                        position: latLng,
+                        icon: markerType,
+                        map: map,
+                        url: "/records/"
+                    });
+                    google.maps.event.addListener(marker, 'click', function() {
+                        window.location.href = marker.url;
+                    });
+                return marker;
+                }
+                
+                {% for i in bar_list %}
+                    addMarker(
+                            new google.maps.LatLng({{i[0][0]}},{{i[0][1]}}),
+                            new google.maps.MarkerImage(
+                                "/static/images/bar.png",
+                                new google.maps.Size(5,20*{{i[1]}}),
+                                new google.maps.Point(0,0),
+                                new google.maps.Point(10,20*{{i[1]}})
+                            )
+                    )
+                {% endfor %}
+                var monitoring_timeframe=document.getElementById('monitoring_timeframe')
+                map.controls[google.maps.ControlPosition.TOP_LEFT].push(monitoring_timeframe);
+            }
+            google.maps.event.addDomListener(window, 'load', initialize); 
+        </script>
+		<script src="/static/js/jquery.js"></script>
+		<script src="/static/js/bootstrap.min.js"></script>
+        <script src="/static/js/eyecon-datepicker.js"></script>
+        
+        <script>
+            document.getElementById('loading_block').style.display = 'None';
+            document.getElementById('map-canvas').style.display = '';
+            document.getElementById('filter').style.display = '';
+            document.getElementById('total_container').style.display = '';
+        </script>
+	</body>
+</html>

@@ -81,6 +81,7 @@
                         <ul class="nav pull-left">
                             <li>&nbsp</li>
                             <li><a href="/dashboard/"><i class="icon-tasks"></i> Summary</a></li>
+                            <li><a href="/monitoring/"><i class="icon-eye-open"></i> Monitoring</a></li>
                             <li><a href="/records/"><i class="icon-book"></i> Records</a></li>
                             <li><a href="/map/"><i class="icon-map-marker"></i> Map</a></li>
                             <li class="active"><a href="#"><i class="icon-globe"></i> Timeline</a></li>
@@ -98,23 +99,26 @@
         <div id="date_slider" style="width:70%"></div>
         
         <div id="filter" class="container" style="display: none">
-        Showing cases of:<br>
-        <span id="filter_container">
-        </span>
-        <div style="padding: 0; margin: 0;">
-        <!--
-        From:<br>
-        <input type="text" style="width: calc(100% - 15px); margin-bottom: 0" value="{{date_start}}" id="dpd1" name="date_start">
-        <br>
-        To:<br>
-        <input type="text" style="width: calc(100% - 15px); margin-bottom: 3px" value="{{date_end}}" id="dpd2" name="date_end">
-        -->
-        <input type="text" id="lng" name="lng" value="{{ lng }}" style="display: None">
-        <input type="text" id="lat" name="lat" value="{{ lat }}" style="display: None">
-        <input type="text" id="zoom" name="zoom" value="{{ zoom }}" style="display: None">
+            Showing cases of:<br>
+            <span id="filter_container">
+            </span>
+            
+            <form action="/timeline/" method="get" style="padding: 0; margin: 0;">
+            From:<br>
+            <input type="text" style="width: calc(100% - 15px); margin-bottom: 0" value="{{date_start.month}}/{{date_start.day}}/{{date_start.year}}" id="dpd1" name="date_start">
+            <br>
+            To:<br>
+            <input type="text" style="width: calc(100% - 15px); margin-bottom: 3px" value="{{date_end.month}}/{{date_end.day}}/{{date_end.year}}" id="dpd2" name="date_end">
+            <div class="" style="padding: 0; margin: 0">
+            <input class="btn btn-medium" type="reset" value="Reset" onclick="window.location='/map/';"  style="display: inline-block; width: 48%"/>
+            <input class="btn btn-medium" type="submit" id="submit_button" value="Filter" style="display: inline-block; width: 48%" onclick="document.getElementById('lat').value=null;document.getElementById('lng').value=null"/>
+            </div>
+            <input type="text" id="lng" name="lng" value="{{ lng }}" style="display: None">
+            <input type="text" id="lat" name="lat" value="{{ lat }}" style="display: None">
+            <input type="text" id="zoom" name="zoom" value="{{ zoom }}" style="display: None">
+            </form>
         </div>
-        </div>
-
+        
         <div id="total_container" class="container" style="display: none">
         Cases displayed:<br><div class="pull-right" id="marker_total" name="total" style="margin-right: 5px; font-weight: bold">0</div>
         </div>
@@ -223,6 +227,8 @@
               map.controls[google.maps.ControlPosition.RIGHT_BOTTOM].push(total);
               var slider = document.getElementById('date_slider')
               map.controls[google.maps.ControlPosition.BOTTOM_LEFT].push(slider);
+              var slider_controls = document.getElementById('slider_controls')
+              map.controls[google.maps.ControlPosition.RIGHT].push(slider_controls)
             }
             google.maps.event.addDomListener(window, 'load', initialize);
            
@@ -268,7 +274,7 @@
             triggerMarker();
         </script>
         <script>
-            $("#date_slider").dateRangeSlider({
+            var slider = $("#date_slider").dateRangeSlider({
             defaultValues:{
                 min: min_date,
                 max: max_date
@@ -289,7 +295,29 @@
                     }
                 }
             });
+            
+            function setMin(s){
+                s = s.toLowerCase()
+                var a, b, c;
+                a = b = c = 0;
+                if (s == 'year'){
+                    a = 1
+                }
+                else if(s == 'month'){
+                    b = 1
+                }
+                else{
+                    c = 7
+                }
+                $('#date_slider').dateRangeSlider('min', new Date($('#date_slider').dateRangeSlider('max').getFullYear()-a, $('#date_slider').dateRangeSlider('max').getMonth()-b, $('#date_slider').dateRangeSlider('max').getDate()-c))
+            }
         </script>
+        
+        <div id="slider_controls">
+            <input class="btn btn-medium" type="submit" value="1 Week" onclick="setMin('Week')"><br/>
+            <input class="btn btn-medium" type="submit" value="1 Month" onclick="setMin('Month')"><br/>
+            <input class="btn btn-medium" type="submit" value="1 Year" onclick="setMin('Year')"><br/>
+        </div>
         <script>
         function getCurrentWidth()
         {

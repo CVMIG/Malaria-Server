@@ -17,6 +17,8 @@ from misc import Pagination
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from reportlab.lib.units import inch
+
+from sqlalchemy import distinct
 # Default to Pillow and fallback to PIL
 try: 
     import Image as PIL
@@ -260,6 +262,27 @@ def maps():
             lat = 10.422988
             lng = 120.629883
     return render_template("map.html", lat = lat, lng = lng, zoom = zoom, case_list = sorted_list, date_start = date_start, date_end = date_end, user = current_user)
+
+@app.route('/monitoring/')
+@login_required
+def monitoring():
+    # Build bar list for map
+    # Get all unique coordinates
+    unique_coor = Case.query.group_by(Case.lat, Case.lng)
+    bar_list = []
+    for i in unique_coor:
+        count = Case.query.filter_by(lat=i.lat, lng=i.lng).count()
+        print str(i.lng) + ', ' + str(i.lat) + ' = ' + str(count)
+        bar_list.append(((i.lat, i.lng), count))
+    week_start = "week_start"
+    week_end = "today"
+    location = "palawan"
+    cases_this_week = 13
+    # Default to palawan
+    zoom = 7
+    lat = 10.066667
+    lng = 118.905
+    return render_template("monitoring.html", lat = lat, lng = lng, zoom = zoom, bar_list = bar_list, week_start = week_start, week_end = week_end, location = location, cases_this_week = cases_this_week, user = current_user)
     
 @app.route('/timeline/')
 @login_required
@@ -278,10 +301,25 @@ def timeline():
         date_start = datetime.date.today()-datetime.timedelta(days=30)
         date_end = datetime.date.today()
         zoom = 7
+        case_list = Case.query.all()
+        bound_max = None
+        bound_min = None
         # return redirect('/map/?lat=10.422988&lng=120.629883&zoom=7&date_start=Last 30 Days&date_end=Today')
     # Build marker list for map
-    
-    case_list = Case.query.all()
+    else:
+        a=request.args.get('date_start')
+        b=a.split('/')
+        dt=datetime.date(int(b[2]),int(b[0]),int(b[1]))
+
+        a=request.args.get('date_end')
+        b=a.split('/')
+        dte=datetime.date(int(b[2]),int(b[0]),int(b[1])) + datetime.timedelta(days=1)
+        
+        bound_max = dt
+        bound_min = dte
+        
+        case_list = Case.query.filter(Case.date>=dt,Case.date<=dte)
+
     case_list = [i for i in case_list]
     
     min_date = case_list[0].date
@@ -296,11 +334,19 @@ def timeline():
         if i.date < min_date:
             min_date = i.date
     
+    '''
     date_start = str(min_date.year) + '-' + str(min_date.month) + '-' + str(min_date.day)
     date_end = str(max_date.year) + '-' + str(max_date.month) + '-' + str(max_date.day)
+    '''
     
     date_start = min_date
     date_end = max_date
+    
+    if not (bound_max and bound_min):
+        bound_max = min_date - datetime.timedelta(days=30)
+        bound_min = max_date + datetime.timedelta(days=30)
+    
+    
     
     if default_view or not(lat and lng):
         # Get centroid of markers of cases
@@ -327,7 +373,7 @@ def timeline():
             zoom = 7
             lat = 10.422988
             lng = 120.629883
-    return render_template("timeline.html", lat = lat, lng = lng, zoom = zoom, case_list = sorted_list, date_start = date_start, date_end = date_end, user = current_user)
+    return render_template("timeline.html", lat = lat, lng = lng, zoom = zoom, case_list = sorted_list, date_start = date_start, date_end = date_end, user = current_user, bound_max=bound_max, bound_min = bound_min)
 
 @app.route('/case/<int:id>/',  methods = ['GET', 'POST'])
 def case(id):

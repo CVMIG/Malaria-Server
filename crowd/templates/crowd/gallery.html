@@ -1,0 +1,82 @@
+  <!DOCTYPE html>
+<!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
+<html class="no-js" lang="en" >
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Malaria Crowdsourcing App</title>
+
+  <link rel="stylesheet" href="/crowd/static/css/normalize.css">
+  <link rel="stylesheet" href="/crowd/static/css/foundation.css">
+
+  <link rel="stylesheet" href="/crowd/static/css/app.css">
+
+  <script src="/crowd/static/js/vendor/custom.modernizr.js"></script>
+
+</head>
+<body>
+
+  <nav class="top-bar" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+        <h1><a href="#">Malaria</a></h1>
+      </li>
+    </ul>
+  
+    <section class="top-bar-section">
+      <!-- Right Nav Section -->
+      <ul class="right">
+        <li class="divider"></li>
+        <li class="has-dropdown">
+          <a href="#">{{labeler.labelertype.name}} {{ user.username }}</a>
+          <ul class="dropdown">
+            <li><a href="#">Profile</a></li>
+            <li><a href="#">Settings</a></li>
+          </ul>
+        </li>
+        <li class="divider"></li>
+        <li><a href="/crowd/logout/">Logout</a></li>
+      </ul>
+  
+      <!-- Left Nav Section -->
+      <ul class="left">
+        <li>
+        </li>
+      </ul>
+    </section>
+  </nav>
+  <br>
+  <div class="large-10 columns">
+    <div class="row">
+      <h2><i>Plasmodium Falciparum</i></h2>
+    </div>
+    <div class="row">
+      <ul class="small-block-grid-3">
+        <li><img class="button secondary" src="../static/images/falciparum/fal1.jpg"></li>
+        <li><img class="button secondary" src="../static/images/falciparum/fal2.jpg"></li>
+        <li><img class="button secondary" src="../static/images/falciparum/fal3.jpg"></li>
+        <li><img class="button secondary" src="../static/images/falciparum/fal4.jpg"></li>
+        <li><img class="button secondary" src="../static/images/falciparum/fal5.jpg"></li>
+        <li><img class="button secondary" src="../static/images/falciparum/fal4.jpg"></li>
+      </ul>
+    </div>
+    <hr>
+  </div>
+  <div class="large-2 columns">
+    <ul class="side-nav">
+      <li><h3>Galleries</h3></li>
+      <li><h5><a href="/crowd/gallery/"><i>P. falciparum</i></a></h5></li>
+      <li><h5><a href="/crowd/gallery/"><i>P. vivax</i></a></h5></li>
+      <li><h5><a href="/crowd/gallery/"><i>P. malariae</i></a></h5></li>
+      <li><h5><a href="/crowd/gallery/"><i>P. ovale</i></a></h5></li>
+      <li><a href="/crowd/dashboard/"><h4>Home</h4></a></li>
+    </ul>
+  </div>
+  <script src="/crowd/static/js/vendor/jquery.js"></script>
+  <script src="/crowd/static/js/foundation.min.js"></script>
+  <script>
+    $(document).foundation();
+  </script>
+</body>
+</html>
