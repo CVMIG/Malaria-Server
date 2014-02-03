@@ -328,7 +328,7 @@ def maps():
     case_list = [i for i in case_list]
     sorted_list = dict([(i, []) for i in malariaList[1:]])
     for i in case_list:
-        sorted_list[i.human_diagnosis].append(str(i.lat)+','+str(i.lng))
+        sorted_list[i.human_diagnosis].append((str(i.id),str(i.lat)+','+str(i.lng)))
     
     if default_view or not(lat and lng):
         # Get centroid of markers of cases
@@ -385,8 +385,9 @@ def timeline():
     lat = request.args.get('lat')
     lng = request.args.get('lng')
     zoom = request.args.get('zoom')
-    date_start = request.args.get('date_start')
-    date_end = request.args.get('date_end')
+    bound_start = date_start = request.args.get('date_start')
+    bound_end = date_end = request.args.get('date_end')
+    print str(bound_start)
     default_view = False
     # Check if filters exist
     if not (zoom and date_start and date_end):
@@ -396,21 +397,24 @@ def timeline():
         date_end = datetime.date.today()
         zoom = 7
         case_list = Case.query.all()
-        bound_max = None
-        bound_min = None
+        bound_end = None
+        bound_start = None
         # return redirect('/map/?lat=10.422988&lng=120.629883&zoom=7&date_start=Last 30 Days&date_end=Today')
     # Build marker list for map
     else:
         a=request.args.get('date_start')
         b=a.split('/')
+        print b
         dt=datetime.date(int(b[2]),int(b[0]),int(b[1]))
 
         a=request.args.get('date_end')
         b=a.split('/')
         dte=datetime.date(int(b[2]),int(b[0]),int(b[1])) + datetime.timedelta(days=1)
         
-        bound_max = dt
-        bound_min = dte
+        bound_start = dt
+        bound_end = dte
+        
+        print str(bound_start)
         
         case_list = Case.query.filter(Case.date>=dt,Case.date<=dte)
 
@@ -436,9 +440,9 @@ def timeline():
     date_start = min_date
     date_end = max_date
     
-    if not (bound_max and bound_min):
-        bound_max = min_date - datetime.timedelta(days=30)
-        bound_min = max_date + datetime.timedelta(days=30)
+    if default_view:
+        bound_end = max_date - datetime.timedelta(days=30)
+        bound_start = min_date + datetime.timedelta(days=30)
     
     
     
@@ -467,7 +471,7 @@ def timeline():
             zoom = 7
             lat = 10.422988
             lng = 120.629883
-    return render_template("timeline.html", lat = lat, lng = lng, zoom = zoom, case_list = sorted_list, date_start = date_start, date_end = date_end, user = current_user, bound_max=bound_max, bound_min = bound_min)
+    return render_template("timeline.html", lat = lat, lng = lng, zoom = zoom, case_list = sorted_list, date_start = date_start, date_end = date_end, user = current_user, bound_end=bound_end, bound_start = bound_start)
 
 @app.route('/case/<int:id>/',  methods = ['GET', 'POST'])
 def case(id):

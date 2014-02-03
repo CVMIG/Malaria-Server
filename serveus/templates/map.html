@@ -85,7 +85,7 @@
 			</div>
 		</div>
         
-        <div id="loading_block" style="height: 100px; width: 100%; margin-top: 15%; text-align: center"><img src="/static/images/loading.gif"/></div>
+        <div id="loading_block" style="height: 100px; width: 100%; margin-top: 15%; text-align: center; z-index:1000; position:relative"><img src="/static/images/loading.gif"/></div>
         
         <div id="map-canvas" class="google-maps" style="height: calc(100% - 42px); width: 100%; margin: -20px 0 0; display: none"></div>
 
@@ -140,9 +140,10 @@
             
             var noMalariaPin = new google.maps.MarkerImage(pinImage[4], new google.maps.Size(21, 34), new google.maps.Point(0,0), new google.maps.Point(10, 34));
             
-            function MarkerList(name, list, markerImage) {
+            function MarkerList(name, list, ids, markerImage) {
                 this.name = name;
                 this.list = list;
+                this.ids = ids;
                 this.markerImage = markerImage;
                 this.show = true;
                 this.setVisible = function(b) {
@@ -154,13 +155,12 @@
                 }
             }
             var markers = [
-                new MarkerList("Falciparum", [{% for i in case_list['Falciparum'] %}new google.maps.LatLng({{i}}){% if loop.index0 != (loop.length-1) %},{% endif %}{% endfor %}], falciparumPin),
-                new MarkerList("Vivax", [{% for i in case_list['Vivax'] %}new google.maps.LatLng({{i}}){% if loop.index0 != (loop.length-1) %},{% endif %}{% endfor %}], vivaxPin),
-                new MarkerList("Malariae", [{% for i in case_list['Malariae'] %}new google.maps.LatLng({{i}}){% if loop.index0 != (loop.length-1) %},{% endif %}{% endfor %}], malariaePin),
-                new MarkerList("Ovale", [{% for i in case_list['Ovale'] %}new google.maps.LatLng({{i}}){% if loop.index0 != (loop.length-1) %},{% endif %}{% endfor %}], ovalePin),
-                new MarkerList("No Malaria", [{% for i in case_list['No Malaria'] %}new google.maps.LatLng({{i}}){% if loop.index0 != (loop.length-1) %},{% endif %}{% endfor %}], noMalariaPin)
+                new MarkerList("Falciparum", [{% for i in case_list['Falciparum'] %}new google.maps.LatLng({{i[1]}}){% if loop.index0 != (loop.length-1) %},{% endif %}{% endfor %}], [{% for i in case_list['Falciparum'] %}{{i[0]}}{% if loop.index0 != (loop.length-1) %},{% endif %}{% endfor %}],falciparumPin),
+                new MarkerList("Vivax", [{% for i in case_list['Vivax'] %}new google.maps.LatLng({{i[1]}}){% if loop.index0 != (loop.length-1) %},{% endif %}{% endfor %}], [{% for i in case_list['Vivax'] %}{{i[0]}}{% if loop.index0 != (loop.length-1) %},{% endif %}{% endfor %}], vivaxPin),
+                new MarkerList("Malariae", [{% for i in case_list['Malariae'] %}new google.maps.LatLng({{i[1]}}){% if loop.index0 != (loop.length-1) %},{% endif %}{% endfor %}], [{% for i in case_list['Malariae'] %}{{i[0]}}{% if loop.index0 != (loop.length-1) %},{% endif %}{% endfor %}], malariaePin),
+                new MarkerList("Ovale", [{% for i in case_list['Ovale'] %}new google.maps.LatLng({{i[1]}}){% if loop.index0 != (loop.length-1) %},{% endif %}{% endfor %}], [{% for i in case_list['Ovale'] %}{{i[0]}}{% if loop.index0 != (loop.length-1) %},{% endif %}{% endfor %}], ovalePin),
+                new MarkerList("No Malaria", [{% for i in case_list['No Malaria'] %}new google.maps.LatLng({{i[1]}}){% if loop.index0 != (loop.length-1) %},{% endif %}{% endfor %}], [{% for i in case_list['No Malaria'] %}{{i[0]}}{% if loop.index0 != (loop.length-1) %},{% endif %}{% endfor %}], noMalariaPin)
             ]
-            
             
             function initialize() {
               var myLatlng = new google.maps.LatLng({{lat}},{{lng}});
@@ -170,16 +170,22 @@
                 mapTypeId: google.maps.MapTypeId.ROADMAP
               }
               var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-
-              function addMarker(latLng, markerType) {
-                    return new google.maps.Marker({
+              
+              function addMarker(latLng, markerType, id) {
+                    var marker = new google.maps.Marker({
                     position: latLng,
                     icon: markerType,
-                    map: map
+                    map: map,
+                    url: '/case/' + id
                   });
+                  google.maps.event.addListener(marker, 'click', function() {
+                        window.location.href = marker.url;
+                    });
+                  return marker;
               }
+             
               for (var j=0;j<markers.length;j++) {
-                    for (var i=0, marker_category=markers[j]; i<marker_category.list.length; i++){marker_category.list[i] = addMarker(marker_category.list[i], marker_category.markerImage)}
+                    for (var i=0, marker_category=markers[j]; i<marker_category.list.length; i++){marker_category.list[i] = addMarker(marker_category.list[i], marker_category.markerImage,marker_category.ids[i])}
               }
               
               var filter = document.getElementById('filter')

@@ -30,6 +30,24 @@
 	    -moz-box-shadow: 0px 7px 6px -6px #0F0F0F;
         box-shadow: 0px 7px 6px -6px #0F0F0F;
         }
+        
+        #slider_controls { 
+        background-color: transparent; 
+        right: 20px;
+        width: 80px;
+        background: white; 
+        border: 1px solid;
+        border-color: #999999;
+        padding: 5px;
+        padding-left: 7px;
+        padding-right: 7px;
+        padding-bottom: 3px;
+        margin-right: 5px;
+        -webkit-box-shadow: 0px 7px 6px -6px #0F0F0F;
+	    -moz-box-shadow: 0px 7px 6px -6px #0F0F0F;
+        box-shadow: 0px 7px 6px -6px #0F0F0F;
+        }
+        
         #total_container { 
         background-color: transparent; 
         
@@ -105,12 +123,12 @@
             
             <form action="/timeline/" method="get" style="padding: 0; margin: 0;">
             From:<br>
-            <input type="text" style="width: calc(100% - 15px); margin-bottom: 0" value="{{date_start.month}}/{{date_start.day}}/{{date_start.year}}" id="dpd1" name="date_start">
+            <input type="text" style="width: calc(100% - 15px); margin-bottom: 0" value="{{bound_start.month}}/{{bound_start.day}}/{{bound_start.year}}" id="dpd1" name="date_start">
             <br>
             To:<br>
-            <input type="text" style="width: calc(100% - 15px); margin-bottom: 3px" value="{{date_end.month}}/{{date_end.day}}/{{date_end.year}}" id="dpd2" name="date_end">
+            <input type="text" style="width: calc(100% - 15px); margin-bottom: 3px" value="{{bound_end.month}}/{{bound_end.day}}/{{bound_end.year}}" id="dpd2" name="date_end">
             <div class="" style="padding: 0; margin: 0">
-            <input class="btn btn-medium" type="reset" value="Reset" onclick="window.location='/map/';"  style="display: inline-block; width: 48%"/>
+            <input class="btn btn-medium" type="reset" value="Reset" onclick="window.location='/timeline/';"  style="display: inline-block; width: 48%"/>
             <input class="btn btn-medium" type="submit" id="submit_button" value="Filter" style="display: inline-block; width: 48%" onclick="document.getElementById('lat').value=null;document.getElementById('lng').value=null"/>
             </div>
             <input type="text" id="lng" name="lng" value="{{ lng }}" style="display: None">
@@ -281,8 +299,8 @@
             }},
             {
             bounds:{
-                min: new Date({{date_start.year}}, {{date_start.month}}-1, {{date_start.day}}-1),
-                max: new Date({{date_end.year}}, {{date_end.month}}-1, {{date_end.day}}+1)
+                min: new Date({{bound_start.year}}, {{bound_start.month - 1}}, {{bound_start.day}}),
+                max: new Date({{bound_end.year}}, {{bound_end.month - 1}}, {{bound_end.day}})
             }});
             $("#date_slider").dateRangeSlider('resize');
             $("#date_slider").bind("valuesChanging", function(e, data){
@@ -310,13 +328,25 @@
                     c = 7
                 }
                 $('#date_slider').dateRangeSlider('min', new Date($('#date_slider').dateRangeSlider('max').getFullYear()-a, $('#date_slider').dateRangeSlider('max').getMonth()-b, $('#date_slider').dateRangeSlider('max').getDate()-c))
+                
+                min_date = $('#date_slider').dateRangeSlider('min');
+                max_date = $('#date_slider').dateRangeSlider('max');
+                
+                for (var i=0; i<markers.length; i++)
+                {
+                    if (markers[i].show == true) {
+                        markers[i].setVisible(true);
+                    }
+                }
+                
             }
         </script>
         
-        <div id="slider_controls">
-            <input class="btn btn-medium" type="submit" value="1 Week" onclick="setMin('Week')"><br/>
-            <input class="btn btn-medium" type="submit" value="1 Month" onclick="setMin('Month')"><br/>
-            <input class="btn btn-medium" type="submit" value="1 Year" onclick="setMin('Year')"><br/>
+        <div id="slider_controls" class="row-fluid">
+            Slider size: <br />
+            <input class="btn btn-medium span12" type="submit" value="1 Week" onclick="setMin('Week')"><br/>
+            <input class="btn btn-medium span12" type="submit" value="1 Month" onclick="setMin('Month')"><br/>
+            <input class="btn btn-medium span12" type="submit" value="1 Year" onclick="setMin('Year')"><br/>
         </div>
         <script>
         function getCurrentWidth()
