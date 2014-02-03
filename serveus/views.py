@@ -368,9 +368,10 @@ def monitoring():
         count = Case.query.filter_by(lat=i.lat, lng=i.lng).count()
         print str(i.lng) + ', ' + str(i.lat) + ' = ' + str(count)
         bar_list.append(((i.lat, i.lng), count))
-    week_start = "week_start"
-    week_end = "today"
-    location = "palawan"
+    week_start = datetime.date.today()-datetime.timedelta(days=7)
+    week_start = week_start.strftime('%b. %d , %Y')
+    week_end = date.today().strftime('%b. %d , %Y')
+    location = "Palawan"
     cases_this_week = 13
     # Default to palawan
     zoom = 7
