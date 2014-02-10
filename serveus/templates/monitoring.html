@@ -18,10 +18,7 @@
 
         #monitoring_timeframe{
             color:#FFFFFF;
-        }
-        #timetext{
-            outline-style: solid;
-            outline-color:black;
+            text-shadow:2px 2px 4px #000000;
         }
 		</style>
 	</head>
@@ -77,9 +74,10 @@
             </div>
         </div>
         <span id="monitoring_timeframe">
-            <h1 id="timetext">{{location}}</h1>
+            <h1>{{location}}</h1>
             <h3>{{week_start}} - {{week_end}}</h3>
-            <h3>{{cases_this_week}} cases this week</h3>
+            <h4> This week: {{cases_this_week}} cases
+            <font color="yellow"> Last week: {{cases_last_week}} cases</font></h4>
         </span>  
         <script>
             function initialize() {
