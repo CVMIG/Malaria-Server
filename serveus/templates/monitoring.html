@@ -18,6 +18,7 @@
 
         #monitoring_timeframe{
             color:#FFFFFF;
+            text-shadow:2px 2px 4px #000000;
         }
 		</style>
 	</head>
@@ -69,17 +70,14 @@
                 <h3 id="helpModalLabel">Map</h3>
             </div>
             <div class="modal-body">
-                <p>This page shows the distribution of malaria cases all over the country. <br> Cases from the last 30 days are shown by default. <br><br> Use the filters to narrow down the results. <br><br> <span style="font-weight: bold">Legend: </span><br>
-                &nbsp;&nbsp;&nbsp;<img src="http://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=F|FF0000|000000"/> Falciparum &nbsp;&nbsp;&nbsp; 
-                <img src="http://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=V|00FF00|000000"/> Vivax &nbsp;&nbsp;&nbsp; 
-                <img src="http://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=M|00FFFF|000000"/> Malariae &nbsp;&nbsp;&nbsp; 
-                <img src="http://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=O|FFFF00|000000"/> Ovale &nbsp;&nbsp;&nbsp; 
-                <img src="http://chart.googleapis.com/chart?chst=d_map_pin_letter&chld=|FFFFFF|000000" /> No Malaria</p>
+                <p>This page shows all instances of cases in the past week. <br> The height of the bar signifies how many cases there are in that area. <br><br> The + or - indicates either the increase or decrease of cases compared to the previous week. The number shows by how many. <br><br> 
             </div>
         </div>
         <span id="monitoring_timeframe">
             <h1>{{location}}</h1>
-            <h1>{{week_start}} - {{week_end}}: {{cases_this_week}}</h1>
+            <h3>{{week_start}} - {{week_end}}</h3>
+            <h4> This week: {{cases_this_week}} cases
+            <font color="yellow"> Last week: {{cases_last_week}} cases</font></h4>
         </span>  
         <script>
             function initialize() {
