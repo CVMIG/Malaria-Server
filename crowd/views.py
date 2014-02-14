@@ -145,6 +145,26 @@ def gallery():
     total_images_labeled = TrainingImageLabel.query.group_by(TrainingImageLabel.training_image_id).count()
     
     return render_template("/crowd/gallery.html", user = current_user, labeler = labeler, totalUnlabeled = totalUnlabeled, totalLabeled = totalLabeled, expertNeeded = expertNeeded, leaderboard = leaderboard, total_images_labeled=total_images_labeled)
+
+def quiz():
+    labeler = Labeler.query.filter_by(user_id=current_user.id).first()
+    quizlist=  TrainingImage.query.all()
+    quizlen = len(quizlist)
+    quizind = [0 for i in range(quizlen)]
+    counter=0
+    for i in quizlist:
+        quizind[counter]=counter
+        counter+=1
+    #array of index
+    random.shuffle(quizind)
+    random.shuffle(quizlist) #to be removed later
+    print quizind
+    #sample training image
+    training_image_to_label = quizlist[7]
+	
+	
+    return render_template("/crowd/quiz.html", user = current_user, labeler = labeler,  training_image_to_label=training_image_to_label, quizind = quizind)	
+
     
 @crowd.route('/crowd/session/',  methods = ['GET', 'POST'])
 @login_required
