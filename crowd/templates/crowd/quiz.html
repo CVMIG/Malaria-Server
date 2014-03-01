@@ -1,1 +1,387 @@
+   <!DOCTYPE html>
+<!--[if IE 9]><html class="lt-ie10" lang="en" > <![endif]-->
+<html class="no-js" lang="en" >
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Malaria Crowdsourcing App</title>
+
+  <link rel="stylesheet" href="/crowd/static/css/normalize.css">
+  <link rel="stylesheet" href="/crowd/static/css/foundation.css">
+
+  <link rel="stylesheet" href="/crowd/static/css/app.css">
+
+  <script src="/crowd/static/js/vendor/custom.modernizr.js"></script>
+
+  <link rel="stylesheet" href="/crowd/static/css/dropPin.css" type="text/css" />
+  <script src="/crowd/static/js/jquery.js"></script>
+  <script type="text/javascript" src="/crowd/static/js/dropPin/dropPin.js"></script>
+  <script type="text/javascript" src='/crowd/static/js/dropPin/jquery.elevatezoom.js'></script>
+  <script>
+    $(document).ready(function() {
+      $('#map').dropPin('dropMulti', {
+        fixedHeight:450,
+        fixedWidth:600,
+        backgroundImage: '/pic/{{ training_image_to_label.image_id }}/',
+        zoomImage: '/pic/{{ training_image_to_label.image_id }}/',
+        pin: '/pic/{{ training_image_to_label.image_id }}/'
+      });
+      $('#map').elevateZoom({
+        scrollZoom: true,
+        zoomWindowOffetx: 20,
+        zoomWindowHeight: 300,
+        zoomWindowWidth: 300,
+        borderSize: 0
+      });
+    });
+    $('img').on('dragstart', function(event) { event.preventDefault(); });
+  </script>
+  
+  <script>
+      function Question(id, text, breadcrumb, state) {
+          this.id = id;
+          this.text = text;
+          this.breadcrumb = breadcrumb;
+          this.state = state;
+      }
+
+      function select_species(species) {
+          if ($('#with_' + species).prop('checked')) {
+              $('#btn_' + species).toggleClass('secondary', true);
+          } else {
+              $('#btn_' + species).toggleClass('secondary', false);
+          }
+          $('#with_' + species).prop('checked', !$('#with_' + species).prop('checked'));
+      }
+
+      function submit_form() {
+          $('input[maltype="F"]').each(function() {
+              falciparum_pins.push($(this).val());
+          });
+          $('#falciparum_coordinates').val(falciparum_pins.join());
+
+          $('input[maltype="V"]').each(function() {
+              vivax_pins.push($(this).val());
+          });
+          $('#vivax_coordinates').val(vivax_pins.join());
+
+          $('input[maltype="O"]').each(function() {
+              ovale_pins.push($(this).val());
+          });
+          $('#ovale_coordinates').val(ovale_pins.join());
+
+          $('input[maltype="M"]').each(function() {
+              malariae_pins.push($(this).val());
+          });
+          $('#malariae_coordinates').val(malariae_pins.join());
+          //$('#g_checkboxes').show();
+          $('form#form').submit();
+      }
+
+      function answer_question(answer) {
+          if (answer == "No") {
+              jump_to_breadcrumb(breadcrumbs[breadcrumbs.length-1].id);
+          } else if (current_question.state <= 1) {
+              breadcrumbs.push(current_question);
+              current_question = get_next_question(current_question);
+              display(current_question);
+          } else if (current_question.state == 2) {
+             refreshf();
+                
+          }
+            else{
+            submit_form();
+          }
+      }
+
+      function refresh_breadcrumbs() {
+          $('#breadcrumbs').empty();
+          for (var i = 0; i < breadcrumbs.length; i++) {
+              var cur = breadcrumbs[i];
+              $('#breadcrumbs').append('<li><a onclick="jump_to_breadcrumb(' + cur.id + ')">' + cur.breadcrumb + '</a></li>');
+          }
+          $('#breadcrumbs').append('<li class="current">' + current_question.breadcrumb + '</li>');
+      }
+
+      function get_next_question(question) {
+          var num = question.id;
+          var map = ['with_falciparum','with_vivax','with_ovale','with_malariae'];
+          if (num == 4) {
+              return questions[STATE_FINAL];
+          } else if (num == STATE_FINAL) {
+              submit_form();
+          } else {
+              for (var i = num; i <= 3; i++) {
+                  if ($('#' + map[i]).prop('checked')) {
+                      return questions[i+1];
+                  }
+              }
+              return questions[STATE_FINAL];
+          }
+      }
+
+      function remove_pins(id) {
+          if (id >= 1 && id <= 4) {
+              $('input[maltype="' + img_map[id-1] + '"]').each(function() {
+                  $(this).remove();
+              });
+              $('img[pintype="' + (id-1) + '"]').each(function() {
+                  $(this).remove();
+              });
+              if (id == 1) {
+                  falciparum_pins.length = 0;
+              } else if (id == 2) {
+                  vivax_pins.length = 0;
+              } else if (id == 3) {
+                  ovale_pins.length = 0;
+              } else {
+                  malariae_pins.length = 0;
+              }
+          }
+      }
+
+      function jump_to_breadcrumb(id) {
+          var cur;
+          remove_pins(current_question.id);
+          while (true) {
+              cur = breadcrumbs.pop();
+              remove_pins(cur.id);
+              if (cur.id == id) {
+                  break;
+              }
+          }
+          current_question = cur;
+          display(current_question);
+      }
+
+      function display(question) {
+          display_bottom(question);
+          refresh_breadcrumbs();
+          refresh_pin_type();
+      }
+
+      function refresh_pin_type() {
+          if (current_question.state == 1) {
+              $('#map').dropPin('pinType' + img_map[current_question.id-1]);
+          } else {
+              $('#map').dropPin('pinTypeNone');
+          }
+      }
+
+      function display_bottom(question) {
+          $('.g_bottom').each(function() {
+              $(this).hide();
+          });
+          if (question.state == 0) {
+              $('#question').text(question.text);
+              $('#g_checkboxes').show();
+          } else if (question.state == 1) {
+              $('#question').html("<span class='round alert label'>&nbsp;!&nbsp;</span>&nbsp;&nbsp;Click on the image to pinpoint <strong>" + question.text + "</strong> cells then click <strong>Finish</strong> when you are done.");
+              $('#g_buttons').show();
+          } else {
+              $('#question').html("<span class='round alert label'>&nbsp;!&nbsp;</span>&nbsp;&nbsp;Click <strong>Finish</strong> when you are ready to submit your answers.");
+
+              for (var i = 0; i < species_list.length; i++) {
+                  var species = species_list[i];
+                  if ($('#with_' + species).prop('checked')) {
+                      $('#sum_' + species).toggleClass('secondary', false);
+                  } else {
+                      $('#sum_' + species).toggleClass('secondary', true);
+                  }
+              }
+              $('#g_summary').show();
+              $('#g_buttons').show();
+          }
+      }
+
+      var questions = [];
+
+      // id, text, breadcrumb, state
+      // state: 0 = unpinnable|checkboxes, 1 = pinnable|pin:finish/back, 2 = summary|finish/back
+      questions.push(new Question(0, "Which malaria species are present?", "Which malaria species are present?", 0));
+      questions.push(new Question(1, "Falciparum", "Pin locations of falciparum", 1));
+      questions.push(new Question(2, "Vivax", "Pin locations of vivax", 1));
+      questions.push(new Question(3, "Ovale", "Pin locations of ovale", 1));
+      questions.push(new Question(4, "Malariae", "Pin locations of malariae", 1));
+      questions.push(new Question(5, "Final", "Finalize", 2));
+
+      var breadcrumbs = [];
+      var falciparum_pins = [];
+      var vivax_pins = [];
+      var ovale_pins = [];
+      var malariae_pins = [];
+      var current_question = questions[0];
+
+      var STATE_FINAL = 5;
+      var species_list = ['falciparum','vivax','ovale','malariae'];
+      var img_map = ['F','V','O','M'];
+
+      $(document).ready(function() {
+          display(current_question);
+      });
+  </script>
+
+</head>
+<body>
+
+  <nav class="top-bar" data-topbar>
+    <ul class="title-area">
+      <li class="name">
+        <h1><a href="/crowd/dashboard/">Malaria</a></h1>
+      </li>
+    </ul>
+  
+    <section class="top-bar-section">
+      <!-- Right Nav Section -->
+      <ul class="right">
+        <li class="divider"></li>
+        <li class="has-dropdown">
+          <a href="#">{{labeler.labelertype.name}} {{ user.username }}</a>
+          <ul class="dropdown">
+            <li><a href="#">Profile</a></li>
+            <li><a href="#">Settings</a></li>
+          </ul>
+        </li>
+        <li class="divider"></li>
+        <li><a href="/crowd/logout/">Logout</a></li>
+      </ul>
+  
+      <!-- Left Nav Section -->
+      <ul class="left">
+        <li>
+        </li>
+      </ul>
+    </section>
+  </nav>
+
+  <ul class="breadcrumbs" id="breadcrumbs">
+  </ul>
+
+  <div class="row">
+    <div class='small-4 columns text-center'></div>
+    <div class="small-12 columns text-center">
+      <div id="map" data-zoom-image="/pic/{{ training_image_to_label.image_id }}/"></div>
+    </div>
+    
+  </div>
+  
+  <div class="row">
+    <div class="small-12 columns text-center">
+      &nbsp;
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="small-12 columns text-center">
+      {% if training_image_to_label.image_id %}
+      {% else %}
+      <img src="/pic/{{ training_image_to_label.image_id }}/" width=450px height=337px />
+      No more images to label for now. Check back later or <a href="/crowd/session/">retry</a>.
+      {% endif %}
+    </div>
+  </div>
+  
+  <div class="row">
+    <div class="small-12 columns text-center">
+      &nbsp;
+    </div>
+  </div>
+  
+  {% if training_image_to_label.image_id %}
+  <div class="row">
+      <div class="panel" style="display: none">
+    </div>
+  </div>
+  {% endif %}
+  
+  <div class="row g_bottom" id="g_summary">
+    <div class="small-3 columns text-center">
+        <input type="button" class="round expand secondary disabled button" id="sum_falciparum" value="Falciparum" />
+    </div>
+    <div class="small-3 columns text-center">
+        <input type="button" class="round expand secondary disabled button" id="sum_vivax" value="Vivax" />
+    </div>
+    <div class="small-3 columns text-center">
+        <input type="button" class="round expand secondary disabled button" id="sum_ovale" value="Ovale" />
+    </div>
+    <div class="small-3 columns text-center">
+        <input type="button" class="round expand secondary disabled button" id="sum_malariae" value="Malariae" />
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="small-centered columns text-center">
+      <div class="panel radius">
+          <h4><span id="question"></span></h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g_bottom" id="g_buttons">
+    <div class="small-6 columns text-center">
+      <a id="btn_no" onclick="answer_question('No');" class="button large alert radius expand">Back</a>
+    </div>
+    <div class="small-6 columns text-center">
+      <a id="btn_yes" onclick="answer_question('Yes');" class="button large success radius expand">Finish</a>
+    </div>
+  </div>
+
+  <div class="row g_bottom" id="g_checkboxes">
+    <div class="small-3 columns text-center">
+        <input type="button" class="round expand secondary button" id="btn_falciparum" value="Falciparum" onclick="select_species('falciparum');" />
+    </div>
+    <div class="small-3 columns text-center">
+        <input type="button" class="round expand secondary button" id="btn_vivax" value="Vivax" onclick="select_species('vivax');" />
+    </div>
+    <div class="small-3 columns text-center">
+        <input type="button" class="round expand secondary button" id="btn_ovale" value="Ovale" onclick="select_species('ovale');" />
+    </div>
+    <div class="small-3 columns text-center">
+        <input type="button" class="round expand secondary button" id="btn_malariae" value="Malariae" onclick="select_species('malariae');" />
+    </div>
+    <form id="form" action="" method="post" name="label">
+        <span style="display: none">
+        <input type="checkbox" id="with_malaria" name="with_malaria"/> Is there malaria? <br>
+        <input type="checkbox" id="with_falciparum" name="with_falciparum"/> Falciparum <br>
+        <input type="checkbox" id="with_vivax" name="with_vivax"/> Vivax <br>
+        <input type="checkbox" id="with_ovale" name="with_ovale"/> Ovale <br>
+        <input type="checkbox" id="with_malariae" name="with_malariae"/> Malariae <br>
+        <input type="checkbox" id="with_malaria" name="with_malaria"/> Is there malaria? <br>
+        <input type="text" placeholder="Coordinates (1,2)(3,5)(23,13)" id="falciparum_coordinates" name="falciparum_coordinates"/>
+        <input type="text" placeholder="Answering duration 00:00:00" id="falciparum_duration" name="falciparum_duration"/>
+        <input type="text" placeholder="Coordinates (1,2)(3,5)(23,13)" id="vivax_coordinates" name="vivax_coordinates"/>
+        <input type="text" placeholder="Answering duration 00:00:00" id="vivax_duration" name="vivax_duration"/>
+        <input type="text" placeholder="Coordinates (1,2)(3,5)(23,13)" id="ovale_coordinates" name="ovale_coordinates"/>
+        <input type="text" placeholder="Answering duration 00:00:00" id="ovale_duration" name="ovale_duration"/>
+        <input type="text" placeholder="Coordinates (1,2)(3,5)(23,13)" id="malariae_coordinates" name="malariae_coordinates"/>
+        <input type="text" placeholder="Answering duration 00:00:00" id="malariae_duration" name="malariae_duration"/>
+        <input type="checkbox" id="unsure" name="unsure"/> Unsure? <br>
+        <input class="button success radius" type="submit" value="Submit" />
+        </span>
+    </form>
+    <div class="small-12 columns text-center">
+      <a onclick="answer_question('Yes');" class="button large success radius expand">Next</a>
+    </div>
+  </div>
+  <script>
+  var counter=1;
+  list = {{quizlist}}
+    function refreshf(){
+    $.post('/crowd/quiz/', {
+    ind: list[counter],
+    },function(data){  
+    })
+    e.preventDefault();
+    counter=counter+1; 
+    //$('#abc').html((list[counter]).toString());
+
+    }
+    </script>
+  <script src="/crowd/static/js/foundation.min.js"></script>
+  <script>
+    $(document).foundation();
+  </script>
+</body>
+</html>
  

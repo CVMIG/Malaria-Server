@@ -146,24 +146,35 @@ def gallery():
     
     return render_template("/crowd/gallery.html", user = current_user, labeler = labeler, totalUnlabeled = totalUnlabeled, totalLabeled = totalLabeled, expertNeeded = expertNeeded, leaderboard = leaderboard, total_images_labeled=total_images_labeled)
 
+@crowd.route('/crowd/quiz/',  methods = ['GET', 'POST'])
+@login_required
 def quiz():
-    labeler = Labeler.query.filter_by(user_id=current_user.id).first()
-    quizlist=  TrainingImage.query.all()
-    quizlen = len(quizlist)
-    quizind = [0 for i in range(quizlen)]
-    counter=0
-    for i in quizlist:
-        quizind[counter]=counter
-        counter+=1
-    #array of index
-    random.shuffle(quizind)
-    random.shuffle(quizlist) #to be removed later
-    print quizind
-    #sample training image
-    training_image_to_label = quizlist[7]
-	
-	
-    return render_template("/crowd/quiz.html", user = current_user, labeler = labeler,  training_image_to_label=training_image_to_label, quizind = quizind)	
+    if request.method == 'GET' : 
+        labeler = Labeler.query.filter_by(user_id=current_user.id).first()
+   # random.shuffle(quizlist) #to be removed later
+        quizlist = [ids.id for ids in TrainingImage.query.all()]
+            
+        quizlen = len(quizlist)
+        quizind = [0 for i in range(quizlen)]
+        counter=0
+        for i in quizlist:
+            quizind[counter]=counter
+            counter+=1
+        #array of index
+        random.shuffle(quizlist)
+        print quizlist
+        #sample training image
+        training_image_to_label=TrainingImage.query.get(quizlist[0])
+        
+        return render_template("/crowd/quiz.html", user = current_user, labeler = labeler,  training_image_to_label=training_image_to_label, quizind = quizind, quizlist=quizlist)
+        
+    elif request.method == 'POST':
+       temp = request.form["ind"]
+       print TrainingImage.query.get(temp).image_id
+       temp2 = TrainingImage.query.get(temp).image_id
+      #  print TrainingImage.query.get(temp)
+      #  return training_image_to_label
+       return 'pic/' + str(temp2)
 
     
 @crowd.route('/crowd/session/',  methods = ['GET', 'POST'])
