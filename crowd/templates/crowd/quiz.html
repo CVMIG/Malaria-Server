@@ -20,24 +20,31 @@
   <script type="text/javascript" src='/crowd/static/js/dropPin/jquery.elevatezoom.js'></script>
   <script>
     $(document).ready(function() {
+    var temp1= '/pic/{{ training_image_to_label.image_id }}/'
+    one(temp1);
+    });
+    $('img').on('dragstart', function(event) { event.preventDefault(); });
+  </script>
+  
+  <script>
+            function one(data){
       $('#map').dropPin('dropMulti', {
         fixedHeight:450,
         fixedWidth:600,
-        backgroundImage: '/pic/{{ training_image_to_label.image_id }}/',
-        zoomImage: '/pic/{{ training_image_to_label.image_id }}/',
-        pin: '/pic/{{ training_image_to_label.image_id }}/'
+        backgroundImage: data,
+        zoomImage: data,
+        pin: data
       });
-      $('#map').elevateZoom({
+            $('#map').elevateZoom({
         scrollZoom: true,
         zoomWindowOffetx: 20,
         zoomWindowHeight: 300,
         zoomWindowWidth: 300,
         borderSize: 0
       });
-    });
-    $('img').on('dragstart', function(event) { event.preventDefault(); });
+            
+      }
   </script>
-  
   <script>
       function Question(id, text, breadcrumb, state) {
           this.id = id;
@@ -261,7 +268,7 @@
   <div class="row">
     <div class='small-4 columns text-center'></div>
     <div class="small-12 columns text-center">
-      <div id="map" data-zoom-image="/pic/{{ training_image_to_label.image_id }}/"></div>
+    <div id="map" data-zoom-image="/pic/{{ training_image_to_label.image_id }}/"></div>
     </div>
     
   </div>
@@ -365,15 +372,18 @@
     </div>
   </div>
   <script>
-  var counter=1;
+    var counter=1;
   list = {{quizlist}}
     function refreshf(){
     $.post('/crowd/quiz/', {
     ind: list[counter],
-    },function(data){  
-    })
+    },function(data){
+    counter=counter+1;
+    temp2= "/"+data+"/"
+    one(temp2);
+        
+    }) 
     e.preventDefault();
-    counter=counter+1; 
     //$('#abc').html((list[counter]).toString());
 
     }
