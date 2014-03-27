@@ -1,0 +1,23 @@
+> Initialized logger
+> Traceback (most recent call last):
+>   File "run.py", line 3, in <module>
+> from serveus import app
+>   File "C:\Users\RSK\Documents\GitHub\Malaria-Server\serveus\__init__.py", line 71, in <module>
+> from serveus import views, models, admin
+>   File "C:\Users\RSK\Documents\GitHub\Malaria-Server\serveus\admin.py", line 122, in <module>
+> admin.add_view(UserView(User, db.session))
+>   File "C:\Python27\lib\site-packages\flask_admin\contrib\sqla\view.py", line 271, in __init__
+> super(ModelView, self).__init__(model, name, category, endpoint, url)
+>   File "C:\Python27\lib\site-packages\flask_admin\model\base.py", line 495, in __init__
+> self._refresh_cache()
+>   File "C:\Python27\lib\site-packages\flask_admin\model\base.py", line 516, in _refresh_cache
+> self._create_form_class = self.get_create_form()
+>   File "C:\Python27\lib\site-packages\flask_admin\model\base.py", line 731, in get_create_form
+> return self.get_form()
+>   File "C:\Python27\lib\site-packages\flask_admin\model\base.py", line 723, in get_form
+> return self.scaffold_form()
+>   File "C:\Users\RSK\Documents\GitHub\Malaria-Server\serveus\admin.py", line 53, in scaffold_form
+> form_class.password = TextField()
+> NameError
+> :
+> global name 'TextField' is not defined

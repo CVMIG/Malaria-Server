@@ -1,0 +1,4 @@
+> Initialized logger
+> 127.0.0.1 - - [12/Mar/2014 15:48:59] "POST /profilepage/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [12/Mar/2014 15:49:14] "POST /profilepage/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [12/Mar/2014 15:49:23] "GET /monitoring/ HTTP/1.1" 200 -

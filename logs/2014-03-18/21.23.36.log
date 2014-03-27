@@ -1,0 +1,8 @@
+> Initialized logger
+> 127.0.0.1 - - [18/Mar/2014 21:25:21] "GET / HTTP/1.1" 302 -
+> 127.0.0.1 - - [18/Mar/2014 21:25:22] "GET /monitoring/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:25:24] "GET /static/images/bar.png HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:25:27] "GET /admin/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:25:28] "GET /admin/userview/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:25:31] "GET /admin/userview/edit/?url=%2Fadmin%2Fuserview%2F&id=1 HTTP/1.1" 200 -
+>  * Detected change in 'C:\\Users\\RSK\\Documents\\GitHub\\Malaria-Server\\serveus\\admin.py', reloading

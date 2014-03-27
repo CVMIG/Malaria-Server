@@ -1,0 +1,15 @@
+> Initialized logger
+> Traceback (most recent call last):
+>   File "run.py", line 3, in <module>
+> from serveus import app
+>   File "C:\Users\RSK\Documents\GitHub\Malaria-Server\serveus\__init__.py", line 71, in <module>
+> from serveus import views, models, admin
+>   File "
+> C:\Users\RSK\Documents\GitHub\Malaria-Server\serveus\views.py
+> ", line
+> 93
+> elif:
+> ^
+> SyntaxError
+> :
+> invalid syntax

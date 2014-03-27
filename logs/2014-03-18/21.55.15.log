@@ -1,0 +1,55 @@
+> Initialized logger
+> 127.0.0.1 - - [18/Mar/2014 21:55:19] "GET /admin/userview/edit/?url=%2Fadmin%2Fuserview%2F&id=1 HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:55:19] "GET /admin/static/bootstrap/css/bootstrap.css HTTP/1.1" 304 -
+> 127.0.0.1 - - [18/Mar/2014 21:55:19] "GET /admin/static/bootstrap/css/bootstrap-responsive.css HTTP/1.1" 304 -
+> 127.0.0.1 - - [18/Mar/2014 21:55:19] "GET /admin/static/admin/css/admin.css HTTP/1.1" 304 -
+> 127.0.0.1 - - [18/Mar/2014 21:55:19] "GET /admin/static/select2/select2.css HTTP/1.1" 304 -
+> 127.0.0.1 - - [18/Mar/2014 21:55:19] "GET /admin/static/datetimepicker/bootstrap-datetimepicker.css HTTP/1.1" 304 -
+> 127.0.0.1 - - [18/Mar/2014 21:55:19] "GET /admin/static/vendor/jquery-1.8.3.min.js HTTP/1.1" 304 -
+> 127.0.0.1 - - [18/Mar/2014 21:55:19] "GET /admin/static/bootstrap/js/bootstrap.min.js HTTP/1.1" 304 -
+> 127.0.0.1 - - [18/Mar/2014 21:55:19] "GET /admin/static/select2/select2.min.js HTTP/1.1" 304 -
+> 127.0.0.1 - - [18/Mar/2014 21:55:19] "GET /admin/static/datetimepicker/bootstrap-datetimepicker.js HTTP/1.1" 304 -
+> 127.0.0.1 - - [18/Mar/2014 21:55:19] "GET /admin/static/admin/js/form.js HTTP/1.1" 304 -
+> 127.0.0.1 - - [18/Mar/2014 21:55:19] "GET /admin/static/select2/select2.png HTTP/1.1" 304 -
+> 127.0.0.1 - - [18/Mar/2014 21:56:36] "GET /admin/ HTTP/1.1" 403 -
+> 127.0.0.1 - - [18/Mar/2014 21:56:37] "GET /favicon.ico HTTP/1.1" 404 -
+> 127.0.0.1 - - [18/Mar/2014 21:56:39] "GET / HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:56:44] "POST /login/ HTTP/1.1" 302 -
+> 127.0.0.1 - - [18/Mar/2014 21:56:44] "GET /monitoring HTTP/1.1" 301 -
+> 127.0.0.1 - - [18/Mar/2014 21:56:44] "GET /monitoring/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:56:44] "GET /static/css/eyecon-datepicker.css HTTP/1.1" 304 -
+> 127.0.0.1 - - [18/Mar/2014 21:56:44] "GET /static/images/loading.gif HTTP/1.1" 304 -
+> 127.0.0.1 - - [18/Mar/2014 21:56:44] "GET /static/js/eyecon-datepicker.js HTTP/1.1" 304 -
+> 127.0.0.1 - - [18/Mar/2014 21:56:46] "GET /static/img/glyphicons-halflings.png HTTP/1.1" 304 -
+> 127.0.0.1 - - [18/Mar/2014 21:56:47] "GET /static/images/bar.png HTTP/1.1" 304 -
+> 127.0.0.1 - - [18/Mar/2014 21:56:50] "GET /admin/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:56:51] "GET /admin/userview/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:56:54] "GET /admin/userview/edit/?url=%2Fadmin%2Fuserview%2F&id=1 HTTP/1.1" 200 -
+> C:\Python27\lib\site-packages\flask_admin\model\base.py:848: UserWarning: <class 'serveus.models.User'>.on_model_change() now accepts third parameter is_created. Please update your code
+>   warnings.warn(msg)
+> 127.0.0.1 - - [18/Mar/2014 21:56:56] "POST /admin/userview/edit/?url=%2Fadmin%2Fuserview%2F&id=1 HTTP/1.1" 302 -
+> 127.0.0.1 - - [18/Mar/2014 21:56:56] "GET /admin/userview/edit/?url=%2Fadmin%2Fuserview%2F&id=1 HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:56:59] "GET /monitoring/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:57:01] "GET /static/img/glyphicons-halflings-white.png HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:57:01] "GET /logout/ HTTP/1.1" 302 -
+> 127.0.0.1 - - [18/Mar/2014 21:57:01] "GET /index HTTP/1.1" 301 -
+> 127.0.0.1 - - [18/Mar/2014 21:57:01] "GET /index/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:57:05] "POST /login/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:57:09] "POST /login/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:58:00] "POST /login/ HTTP/1.1" 302 -
+> 127.0.0.1 - - [18/Mar/2014 21:58:00] "GET /monitoring HTTP/1.1" 301 -
+> 127.0.0.1 - - [18/Mar/2014 21:58:01] "GET /monitoring/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:58:03] "GET /admin/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:58:04] "GET /admin/userview/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:58:06] "GET /admin/userview/edit/?url=%2Fadmin%2Fuserview%2F&id=1 HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:58:12] "POST /admin/userview/edit/?url=%2Fadmin%2Fuserview%2F&id=1 HTTP/1.1" 302 -
+> 127.0.0.1 - - [18/Mar/2014 21:58:12] "GET /admin/userview/edit/?url=%2Fadmin%2Fuserview%2F&id=1 HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:58:14] "GET /monitoring/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:58:16] "GET /logout/ HTTP/1.1" 302 -
+> 127.0.0.1 - - [18/Mar/2014 21:58:16] "GET /index HTTP/1.1" 301 -
+> 127.0.0.1 - - [18/Mar/2014 21:58:16] "GET /index/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:58:20] "POST /login/ HTTP/1.1" 302 -
+> 127.0.0.1 - - [18/Mar/2014 21:58:20] "GET /monitoring HTTP/1.1" 301 -
+> 127.0.0.1 - - [18/Mar/2014 21:58:20] "GET /monitoring/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [18/Mar/2014 21:58:23] "GET /admin/ HTTP/1.1" 200 -
+>  * Detected change in 'C:\\Users\\RSK\\Documents\\GitHub\\Malaria-Server\\serveus\\admin.py', reloading

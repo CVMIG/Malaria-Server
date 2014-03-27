@@ -1,0 +1,12 @@
+> Initialized logger
+> 127.0.0.1 - - [12/Mar/2014 15:48:17] "POST /profilepage/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [12/Mar/2014 15:48:18] "GET /static/css/bootstrap.min.css HTTP/1.1" 304 -
+> 127.0.0.1 - - [12/Mar/2014 15:48:18] "GET /static/css/bootstrap-responsive.css HTTP/1.1" 304 -
+> 127.0.0.1 - - [12/Mar/2014 15:48:18] "GET /static/css/eyecon-datepicker.css HTTP/1.1" 304 -
+> 127.0.0.1 - - [12/Mar/2014 15:48:18] "GET /static/js/sha1.js HTTP/1.1" 304 -
+> 127.0.0.1 - - [12/Mar/2014 15:48:18] "GET /static/js/jquery.js HTTP/1.1" 304 -
+> 127.0.0.1 - - [12/Mar/2014 15:48:18] "GET /static/js/bootstrap.min.js HTTP/1.1" 304 -
+> 127.0.0.1 - - [12/Mar/2014 15:48:18] "GET /static/img/glyphicons-halflings.png HTTP/1.1" 304 -
+> 127.0.0.1 - - [12/Mar/2014 15:48:22] "GET /profilepage/ HTTP/1.1" 200 -
+> 127.0.0.1 - - [12/Mar/2014 15:48:29] "POST /profilepage/ HTTP/1.1" 200 -
+>  * Detected change in 'C:\\Users\\RSK\\Documents\\GitHub\\Malaria-Server\\serveus\\views.py', reloading
